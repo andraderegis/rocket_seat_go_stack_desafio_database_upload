@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
 @Entity('categories')
@@ -11,7 +11,10 @@ class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
   title: string;
 
   @CreateDateColumn()
