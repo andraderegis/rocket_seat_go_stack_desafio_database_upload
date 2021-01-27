@@ -5,9 +5,14 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import Category from './Category';
+
+export enum TransactionType {
+  INCOME = 'income',
+  OUTCOME = 'outcome'
+}
 
 @Entity('transactions')
 class Transaction {
@@ -17,8 +22,11 @@ class Transaction {
   @Column()
   title: string;
 
-  @Column()
-  type: 'income' | 'outcome';
+  @Column({
+    type: 'enum',
+    enum: TransactionType
+  })
+  type: TransactionType;
 
   @Column()
   value: number;
