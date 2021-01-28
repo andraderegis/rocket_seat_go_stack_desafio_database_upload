@@ -33,7 +33,7 @@ describe('Transaction', () => {
     await mainConnection.close();
   });
 
-  xit('should be able to list transactions', async () => {
+  it('should be able to list transactions', async () => {
     await request(app).post('/transactions').send({
       title: 'March Salary',
       type: 'income',
@@ -121,7 +121,7 @@ describe('Transaction', () => {
     );
   });
 
-  xit('should not create tags when they already exists', async () => {
+  it('should not create tags when they already exists', async () => {
     const transactionsRepository = getRepository(Transaction);
     const categoriesRepository = getRepository(Category);
 
@@ -151,7 +151,7 @@ describe('Transaction', () => {
     expect(transaction).toBeTruthy();
   });
 
-  xit('should not be able to create outcome transaction without a valid balance', async () => {
+  it('should not be able to create outcome transaction without a valid balance', async () => {
     await request(app).post('/transactions').send({
       title: 'March Salary',
       type: 'income',

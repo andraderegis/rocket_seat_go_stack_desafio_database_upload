@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
 // import TransactionsRepository from '../repositories/TransactionsRepository';
+
+import BalanceTransactionService from '../services/BalanceTransactionService';
 import CreateTransactionService from '../services/CreateTransactionService';
 // import DeleteTransactionService from '../services/DeleteTransactionService';
 // import ImportTransactionsService from '../services/ImportTransactionsService';
@@ -8,7 +10,11 @@ import CreateTransactionService from '../services/CreateTransactionService';
 const transactionsRouter = Router();
 
 transactionsRouter.get('/', async (request, response) => {
-  // TODO
+  const balanceTransactionService = new BalanceTransactionService();
+
+  const balanceTransactions = await balanceTransactionService.execute();
+
+  return response.status(200).json(balanceTransactions);
 });
 
 transactionsRouter.post('/', async (request, response) => {
@@ -22,8 +28,6 @@ transactionsRouter.post('/', async (request, response) => {
     type,
     category
   });
-
-  console.log('createTransaction: ', createTransaction);
 
   return response.status(201).json(createTransaction);
 });
