@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
@@ -31,7 +32,9 @@ class Transaction {
   })
   type: TransactionType;
 
-  @Column()
+  @Column({
+    type: 'decimal'
+  })
   value: number;
 
   @ManyToOne(() => Category)
@@ -46,6 +49,11 @@ class Transaction {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @AfterLoad()
+  convertValue(): void {
+    this.value = parseFloat(this.value.toString());
+  }
 }
 
 export default Transaction;
