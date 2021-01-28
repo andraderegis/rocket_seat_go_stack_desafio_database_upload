@@ -10,8 +10,8 @@ import {
 import Category from './Category';
 
 export enum TransactionType {
-  INCOME = 'income',
-  OUTCOME = 'outcome'
+  income = 'income',
+  outcome = 'outcome'
 }
 
 @Entity('transactions')
@@ -19,12 +19,15 @@ class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    nullable: false
+  })
   title: string;
 
   @Column({
     type: 'enum',
-    enum: TransactionType
+    enum: TransactionType,
+    nullable: false
   })
   type: TransactionType;
 
@@ -33,7 +36,10 @@ class Transaction {
 
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
-  category_id: Category;
+  category: Category;
+
+  @Column()
+  category_id: string;
 
   @CreateDateColumn()
   created_at: Date;
