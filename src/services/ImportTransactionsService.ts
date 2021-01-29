@@ -40,24 +40,21 @@ class ImportTransactionsService {
       throw new AppError('CSV is empty or data format is invalid.');
     }
 
-    await fs.promises.unlink(csvFilePath);
+    await this.removeCSVFile(csvFilePath);
 
-    const csvCategoriesTitle = csvTransactions.map(csvTransaction => csvTransaction.category);
+    const csvCategoriesTitle = this.getCategoriesTitleFromCSVTransactions(csvTransactions);
 
     await this.categoryRepository.saveCategoriesByTitle(csvCategoriesTitle);
 
-    const categoriesInRepository = await this.getCategoriesAsMapByTitleKey(csvCategoriesTitle);
+    return this.saveTransactions(csvCategoriesTitle, csvTransactions);
+  }
 
-    const transactionsToSave = csvTransactions.map(csvTransaction => {
-      return this.transactionRespository.create({
-        title: csvTransaction.title,
-        category_id: categoriesInRepository.get(csvTransaction.category)?.id,
-        type: TransactionType[csvTransaction.type as TransactionType],
-        value: csvTransaction.value
-      });
-    });
+  private async removeCSVFile(path: string): Promise<void> {
+    return fs.promises.unlink(path);
+  }
 
-    return this.transactionRespository.save(transactionsToSave);
+  private getCategoriesTitleFromCSVTransactions(transactions: TransactionCsvDTO[]): string[] {
+    return transactions.map(transaction => transaction.category);
   }
 
   private async getCategoriesAsMapByTitleKey(
@@ -78,6 +75,24 @@ class ImportTransactionsService {
     }
 
     return categoriesMap;
+  }
+
+  private async saveTransactions(
+    csvCategoriesTitle: string[],
+    csvTransactions: TransactionCsvDTO[]
+  ): Promise<Transaction[]> {
+    const categoriesInRepository = await this.getCategoriesAsMapByTitleKey(csvCategoriesTitle);
+
+    const transactionsToSave = csvTransactions.map(csvTransaction => {
+      return this.transactionRespository.create({
+        title: csvTransaction.title,
+        category_id: categoriesInRepository.get(csvTransaction.category)?.id,
+        type: TransactionType[csvTransaction.type as TransactionType],
+        value: csvTransaction.value
+      });
+    });
+
+    return this.transactionRespository.save(transactionsToSave);
   }
 }
 
