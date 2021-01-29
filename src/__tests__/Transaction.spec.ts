@@ -192,7 +192,7 @@ describe('Transaction', () => {
     expect(transaction).toBeFalsy();
   });
 
-  xit('should be able to import transactions', async () => {
+  it('should be able to import transactions', async () => {
     const transactionsRepository = getRepository(Transaction);
     const categoriesRepository = getRepository(Category);
 

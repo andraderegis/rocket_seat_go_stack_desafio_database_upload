@@ -15,11 +15,7 @@ class TransactionsRepository extends Repository<Transaction> {
 
     const income = this.getTotalTransactionsByType(transactions, TransactionType.income);
 
-    // console.log('income: ', income);
-
     const outcome = this.getTotalTransactionsByType(transactions, TransactionType.outcome);
-
-    // console.log('outcome: ', outcome);
 
     return {
       income,
